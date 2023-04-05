@@ -1,59 +1,127 @@
-
+const fs = require('fs');
+const util = require('util');
 
 class ProductManager {
-    constructor() {
-      this.products = [];
-      this.productId = 0;
+  constructor() {
+    this.BD = 'productos.json';
+    this.addProd = 'nuevosProductos.json';
+  }
+
+  async addProduct(product) {
+    try {
+      // Leer el archivo 'addProd' en formato de arreglo
+      const readFile = util.promisify(fs.readFile);
+      const data = await readFile(this.addProd);
+      const newProducts = JSON.parse(data);
+
+      // Validar que no se repita el campo 'code' en los nuevos productos
+      if (newProducts.find(p => p.code === product.code)) {
+        throw new Error('El código del producto ya existe en los nuevos productos.');
+      }
+
+      // Validar que todos los campos sean obligatorios
+      if (!product.title || !product.description || !product.price || !product.thumbnail || !product.code || !product.stock) {
+        throw new Error('Todos los campos son obligatorios.');
+      }
+
+      // Generar el campo 'id' auto incremental
+      const products = this.getProductsSync();
+      const id = products.length + newProducts.length + 1;
+
+      // Agregar el producto al arreglo de nuevos productos
+      product.id = id;
+      newProducts.push(product);
+
+      // Escribir los nuevos productos en el archivo 'addProd'
+      const writeFile = util.promisify(fs.writeFile);
+      await writeFile(this.addProd, JSON.stringify(newProducts));
+
+      return 'Producto agregado exitosamente.';
+    } catch (error) {
+      throw new Error(`Error al agregar el producto: ${error.message}`);
     }
-    
-    addProduct(title, description, price, thumbnail, code, stock) {
-        // Validar que no se repita el campo code y que todos los campos sean obligatorios
-        if (!title || !description || !price || !thumbnail || !code || !stock) {
-            console.error('Todos los campos son obligatorios');
-            return;
-        }
-        if (this.products.some(product => product.code === code)) {
-            console.error('El código del producto ya existe');
-            return;
-        }
-        
-        // Crear el objeto producto con un campo adicional llamado id autoincremental
-        const product = {
-            id: ++this.productId,
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock
-        };
-        
-        // Agregar el producto al arreglo products
-        this.products.push(product);
+  }
+
+  async getProducts() {
+    try {
+      // Leer el archivo 'BD' en formato de arreglo
+      const readFile = util.promisify(fs.readFile);
+      const data = await readFile(this.BD);
+      const products = JSON.parse(data);
+      return products;
+    } catch (error) {
+      throw new Error(`Error al obtener los productos: ${error.message}`);
     }
-    
-    getProducts() {
-        // Devolver el arreglo products con todos los productos creados
-        return this.products;
+  }
+
+  async getProductById(id) {
+    try {
+      // Leer el archivo 'BD' en formato de arreglo
+      const readFile = util.promisify(fs.readFile);
+      const data = await readFile(this.BD);
+      const products = JSON.parse(data);
+
+      // Buscar el producto por el ID
+      const product = products.find(p => p.id === id);
+      if (!product) {
+        throw new Error('Producto no encontrado.');
+      }
+
+      return product;
+    } catch (error) {
+      throw new Error(`Error al obtener el producto: ${error.message}`);
     }
-    
-    getProductById(id) {
-        // Buscar en el arreglo products el id que coincida con el id obtenido
-        const product = this.products.find(product => product.id === id);
-        if (!product) {
-            // En caso de no coincidir ningún id debe mostrar un mensaje en consola de error con el mensaje "not found"
-            console.error('Not found');
-        }
-        return product;
+  }
+
+  async updateProduct(id, field, value) {
+    try {
+      // Leer el archivo 'BD' en formato de arreglo
+      const readFile = util.promisify(fs.readFile);
+      const data = await readFile(this.BD);
+      const products = JSON.parse(data);
+
+      // Buscar el producto por el ID
+      const product = products.find(p => p.id === id);
+      if (!product) {
+        throw new Error('Producto no encontrado.');
+      }
+
+      // Actualizar el campo del producto
+      product[field] = value;
+
+      // Escribir los productos actualizados en el archivo 'BD'
+      const writeFile = util.promisify(fs.writeFile);
+      await writeFile(this.BD, JSON.stringify(products));
+
+      return 'Producto actualizado exitosamente.';
+    } catch (error) {
+      throw new Error(`Error al actualizar el producto: ${error.message}`);
     }
+  }
+
+  async deleteProduct(id) {
+    try {
+      // Leer el archivo 'BD' en formato de arreglo
+      const readFile = util.promisify(fs.readFile);
+      const data = await readFile(this.BD);
+      let products = JSON.parse(data);
+
+      // Buscar el índice del producto por el ID
+      const productIndex = products.findIndex(p => p.id === id);
+      if (productIndex === -1) {
+        throw new Error('Producto no encontrado.');
+      }
+
+      // Eliminar el producto del arreglo
+      products.splice(productIndex, 1);
+
+      // Escribir los productos actualizados en el archivo 'BD'
+      const writeFile = util.promisify(fs.writeFile);
+      await writeFile(this.BD, JSON.stringify(products));
+
+      return 'Producto eliminado exitosamente.';
+    } catch (error) {
+      throw new Error(`Error al eliminar el producto: ${error.message}`);
+    }
+  } 
 }
-
-const productManager = new ProductManager();
-
-productManager.addProduct('Producto 1', 'Descripción del producto 1', 10.99, 'imagen1.png', 'PROD1', 50);
-productManager.addProduct('Producto 2', 'Descripción del producto 2', 20.99, 'imagen2.png', 'PROD2', 20);
-// Arroja error por producto repetido en campo code
-productManager.addProduct('Producto 3', 'Descripción del producto 3', 20.99, 'imagen2.png', 'PROD2', 20);
-console.log(productManager.getProducts());
-console.log(productManager.getProductById(1));
-console.log(productManager.getProductById(3)); // Este debe mostrar un mensaje de error en consola
