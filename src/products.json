@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "title": "Laptop Lenovo ThinkPad E15",
+        "description": "Laptop empresarial con pantalla Full HD de 15.6 pulgadas, procesador Intel Core i5, 8GB de RAM y 512GB de almacenamiento SSD.",
+        "price": 12999.99,
+        "thumbnail": "https://picsum.photos/id/10/300/200",
+        "code": "LEN001",
+        "stock": 10,
+        "status": true,
+        "category": "hardware"
+      },
+      {
+        "id": 2,
+        "title": "Smartphone Samsung Galaxy A52",
+        "description": "Smartphone Android con pantalla Super AMOLED de 6.5 pulgadas, procesador Qualcomm Snapdragon 720G, 8GB de RAM y 128GB de almacenamiento interno.",
+        "price": 7199.00,
+        "thumbnail": "https://picsum.photos/id/20/300/200",
+        "code": "SAM001",
+        "stock": 15,
+        "status": true,
+        "category": "hardware"
+      },
+      {
+        "id": 3,
+        "title": "Smartwatch Apple Watch Series 7",
+        "description": "Smartwatch con pantalla Retina siempre activa de 41 mm, caja de aluminio, GPS y GLONASS integrado, resistente al agua hasta 50 metros y con seguimiento de la salud.",
+        "price": 12999.00,
+        "thumbnail": "https://picsum.photos/id/30/300/200",
+        "code": "APP001",
+        "stock": 5,
+        "status": true,
+        "category": "hardware"
+      },
+      {
+        "id": 4,
+        "title": "Tablet Samsung Galaxy Tab A7",
+        "description": "Tablet Android con pantalla TFT de 10.4 pulgadas, procesador Qualcomm Snapdragon 662, 3GB de RAM y 32GB de almacenamiento interno, con una batería de 7040 mAh.",
+        "price": 4299.00,
+        "thumbnail": "https://picsum.photos/id/40/300/200",
+        "code": "SAM002",
+        "stock": 20,
+        "status": true,
+        "category": "hardware"
+      },
+      {
+        "id": 5,
+        "title": "Impresora HP DeskJet 2710",
+        "description": "Impresora todo en uno con conectividad Wi-Fi, impresión a doble cara y escaneo, con la posibilidad de imprimir desde dispositivos móviles.",
+        "price": 1899.00,
+        "thumbnail": "https://picsum.photos/id/50/300/200",
+        "code": "HP001",
+        "stock": 8,
+        "status": true,
+        "category": "hardware"
+      }
+]
